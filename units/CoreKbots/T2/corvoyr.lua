@@ -26,7 +26,7 @@ return {
 		maxslope = 16,
 		maxvelocity = 1.5,
 		maxwaterdepth = 0,
-		movementclass = "KBOT3",
+		movementclass = "KBOT2",
 		name = "Voyeur",
 		objectname = "CORVOYR",
 		onoffable = true,

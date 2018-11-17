@@ -145,7 +145,7 @@ return {
 				soundhitwet = "splshbig",
 				soundhitwetvolume = 0.5,
 				soundstart = "rockhvy2",
-				startvelocity = 420,
+				startvelocity = 450,
                 texture1 = "trans",
 				texture2 = "coresmoketrail",
 				tolerance = 8000,
@@ -155,7 +155,7 @@ return {
 				weaponacceleration = 110,
 				weapontimer = 5,
 				weapontype = "MissileLauncher",
-				weaponvelocity = 680,
+				weaponvelocity = 545,
 				damage = {
 					bombers = 120,
 					commanders = 32,

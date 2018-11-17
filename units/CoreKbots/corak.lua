@@ -8,8 +8,8 @@ return {
 		buildtime = 1279,
 		canmove = true,
 		category = "KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE",
-		collisionvolumeoffsets = "0 -2 -3",
-		collisionvolumescales = "24 28 24",
+		collisionvolumeoffsets = "0 -1 0",
+		collisionvolumescales = "22 28 22",
 		collisionvolumetype = "CylY",
 		corpse = "DEAD",
 		description = "Fast Infantry Kbot",
@@ -37,8 +37,8 @@ return {
 		upright = true,
 		customparams = {
 			description_long = "A.K. is a light infantry Kbot which is cheap and quick to build. Proves useful for scouting and taking down unguarded structures like metal extractors and early eco. It is armed with light, but precise laser with a little longer range than PeeWee, so with  little microing skills you can outrange them eaisily. In late T1 warfare A.K.'s can be used for ambushing Commanders and speedy skirmishing. However, light armor and relatively short range makes them very vulnerable to defensive towers and riot tanks.",
-			wpn1turretx = 75,
-			wpn1turrety = 225,
+		wpn1turretx = 180,
+		wpn1turrety = 230,		
 		},
 		featuredefs = {
 			dead = {
@@ -115,7 +115,6 @@ return {
 				areaofeffect = 8,
 				avoidfeature = false,
 				beamtime = 0.1,
-				beamttl = 1,
 				corethickness = 0.14,
 				craterareaofeffect = 0,
 				craterboost = 0,

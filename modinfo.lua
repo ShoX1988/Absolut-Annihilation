@@ -1,12 +1,11 @@
 return {
-  name = 'Balanced Annihilation',
-  description = 'Balanced Annihilation',
-  shortname = 'BA',
+  name = 'Absolut Annihilation',
+  description = 'Absolut Annihilation',
+  shortname = 'AA',
   version = '$VERSION',
   mutator = 'Official',
-  game = 'Balanced Annihilation',
-  shortGame = 'BA',
+  game = 'Absolut Annihilation',
+  shortGame = 'AA',
   modtype = 1,
-  url = "https://www.balancedannihilation.com",
-  engine = "104.0.1-853-ge0ab082 maintenance",    -- for chobby
+  engine = "",    -- for chobby
 }

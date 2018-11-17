@@ -8,7 +8,7 @@ function widget:GetInfo()
 		date      = "2012.10.01",
 		license   = "GNU GPL v2",
 		layer     = 0,
-		enabled   = false
+		enabled   = true
 	}
 end
 --------------------------------------------------------------------------------
@@ -23,9 +23,9 @@ end
 
 local unitList = {}
 --MARKER LIST ------------------------------------
-unitList["BA"] = {
---[UnitDefNames["armcom"].id] = true,
---[UnitDefNames["corcom"].id] = true,
+unitList["SA"] = {
+[UnitDefNames["armcom"].id] = {["en"]="Enemy Commander", },
+[UnitDefNames["corcom"].id] = {["en"]="Enemy Commander", },
 
 [UnitDefNames["armamd"].id] = {["en"]="Anti-Nuke", ["de"]="Anti-Atomwaffe", ["fr"]="Contre l'Arme Nuclaire" },
 [UnitDefNames["corfmd"].id] = {["en"]="Anti-Nuke" , ["de"]="Anti-Atomwaffe", ["fr"]="Contre l'Arme Nuclaire" },

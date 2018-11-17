@@ -157,6 +157,8 @@ return {
 				areaofeffect = 20,
 				avoidfeature = false,
 				burnblow = true,
+				beamttl = 6,
+				beamdecay = 0.75,
 				collideenemy = true,
 				corethickness = 0.24,
 				craterareaofeffect = 0,

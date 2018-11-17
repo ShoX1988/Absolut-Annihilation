@@ -26,7 +26,7 @@ return {
 		maxslope = 32,
 		maxvelocity = 1.3,
 		maxwaterdepth = 112,
-		movementclass = "KBOT3",
+		movementclass = "KBOT2",
 		name = "Spectre",
 		nochasecategory = "MOBILE",
 		objectname = "CORSPEC",

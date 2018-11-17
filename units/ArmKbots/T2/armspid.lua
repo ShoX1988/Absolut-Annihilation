@@ -1,9 +1,9 @@
 return {
 	armspid = {
 		acceleration = 0.18,
-		autoheal = 15,
+		autoheal = 0,
 		brakerate = 0.564,
-		buildcostenergy = 3400,
+		buildcostenergy = 3380,
 		buildcostmetal = 175,
 		buildpic = "ARMSPID.DDS",
 		buildtime = 5090,
@@ -147,7 +147,7 @@ return {
 				weapontype = "BeamLaser",
 				weaponvelocity = 800,
 				damage = {
-					default = 850,
+					default = 1750,
 				},
 				customparams = {
 					light_color = "0.7 0.7 1",

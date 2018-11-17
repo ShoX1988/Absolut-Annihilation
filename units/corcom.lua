@@ -106,7 +106,6 @@ tablecorcom = {
 		-- [22] = "corsonar",
 		[22] = "corfdrag",
 		[23] = "cortl",
-		[24] = "corgplat",
 		[25] = "corfrt",
 		[26] = "corfrad",
 	},

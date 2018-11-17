@@ -179,14 +179,10 @@ function loadWeaponDefs()
 						break
 					end
 				end
-				params.life = 1 + (15 * WeaponDefs[i].beamtime)
 				damage = damage/WeaponDefs[i].beamtime
-				params.radius = (params.radius*1.4) + (damage/2000)
-				params.orgMult = (0.35 + (damage/350000)) * globalLightMult
-				if params.orgMult > 0.55 then
-					params.orgMult = 0.55
-				end
-				params.yoffset = 4 + (params.radius/300)
+				params.radius = params.radius + (damage/120)
+				params.orgMult = (0.135 + (damage/100000)) * globalLightMult
+				params.yoffset = 4 + (params.radius/250)
 				if params.yoffset > 50 then params.yoffset = 50 end
 				--params.radius = params.radius
 			end
@@ -255,8 +251,8 @@ local function GetLightsFromUnitDefs()
 		elseif (weaponDef.type == 'LaserCannon') then
 			weaponData.radius = 70 * weaponDef.size
 		elseif (weaponDef.type == 'DGun') then
-			weaponData.radius = 450
-			lightMultiplier = 0.55
+			weaponData.radius = 500
+			lightMultiplier = 0.28
 		elseif (weaponDef.type == 'MissileLauncher') then
 			weaponData.radius = 125 * weaponDef.size
 			if weaponDef.damageAreaOfEffect ~= nil  then
@@ -794,7 +790,6 @@ end
 -- function called by explosion_lights gadget
 function GadgetWeaponExplosion(px, py, pz, weaponID, ownerID)
 	if weaponConf[weaponID] ~= nil then
-		--Spring.Echo(weaponConf[weaponID].orgMult..'   '..weaponConf[weaponID].radius..'  '..weaponConf[weaponID].life)
 		local params = {
 			life = weaponConf[weaponID].life,
 			orgMult = weaponConf[weaponID].orgMult,

@@ -19,7 +19,6 @@ return {
 		explodeas = "tinyBuildingexplosiongeneric",
 		footprintx = 2,
 		footprintz = 2,
-		decoyfor = "armdrag",
 		hidedamage = true,
 		icontype = "building",
 		idleautoheal = 10,

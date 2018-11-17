@@ -32,9 +32,9 @@ elseif Game and Game.version then
 end
 
 -- set minimun engine version
-local minEngineVersionTitle = '104.0.1.853'
+local minEngineVersionTitle = '104.0.1.567'
 local enabled = false
-if (engineVersion < 1000 and engineVersion >= 105) or engineVersion >= 10401853 then
+if (engineVersion < 1000 and engineVersion >= 105) or engineVersion >= 10401567 then
 	enabled = true
 end
 
@@ -725,7 +725,7 @@ function gadget:DrawScreen()
 	 	uiScale = (0.75 + (vsx*vsy / 7500000)) * customScale
 
 		if Script.LuaUI("GuishaderInsertRect") then
-			if not readied and not spec then
+			if not readied then
 				Script.LuaUI.GuishaderInsertRect(
 					readyX+(readyW/2)-(((readyW/2)+bgMargin)*uiScale),
 					readyY+(readyH/2)-(((readyH/2)+bgMargin)*uiScale),

@@ -172,12 +172,10 @@ end
 -----------------------------------------------------------------------------------------------------------------
 
 function NanoLasersNoShader:Update(n)
-  if not self._lastupdate or thisGameFrame - self._lastupdate > 2 or (self.quickupdates and thisGameFrame - self._lastupdate >= 1) then  -- save some performance/memory
-    UpdateNanoParticles(self)
+  UpdateNanoParticles(self)
 
-    if (self._dead) then
-      RemoveParticles(self.id)
-    end
+  if (self._dead) then
+    RemoveParticles(self.id)
   end
 end
 
@@ -187,7 +185,7 @@ function NanoLasersNoShader:ReInitialize()
 end
 
 function NanoLasersNoShader:Visible()
-  if ((self.allyID ~= LocalAllyTeamID)and(self.visibility == 0)) or not self._midpos then
+  if (self.allyID ~= LocalAllyTeamID)and(self.visibility == 0) then
     return false
   end
 

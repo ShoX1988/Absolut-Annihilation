@@ -30,7 +30,7 @@ return {
 		maxwaterdepth = 25,
 		metalmake = 0.07,
 		metalstorage = 50,
-		movementclass = "KBOT3",
+		movementclass = "KBOT2",
 		name = "Construction Kbot",
 		objectname = "ARMCK",
 		seismicsignature = 0,

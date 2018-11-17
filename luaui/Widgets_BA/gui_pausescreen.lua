@@ -112,41 +112,6 @@ local fragmentShaderSource = {
 	]],
 }
 
-local prevGameFrameTime = osClock()
-function widget:GameFrame(dt)
-    prevGameFrameTime = osClock()
-end
-
-function widget:Update(dt)
-    local now = osClock()
-    previousDrawScreenClock = now
-
-    local diffPauseTime = ( now - pauseTimestamp)
-
-    if ( ( not paused and lastPause ) or ( paused and not lastPause ) ) then
-        --pause switch
-        pauseTimestamp = osClock()
-        if ( diffPauseTime <= slideTime ) then
-            pauseTimestamp = pauseTimestamp - ( slideTime - ( diffPauseTime / slideTime ) * slideTime )
-        end
-    end
-
-    if ( paused and not lastPause ) then
-        --new pause
-        if widgetInitTime + 5 > now then        -- so if you do /luaui reload when paused, it wont re-animate
-            pauseTimestamp = now - (slideTime + autoFadeTime)
-        end
-    end
-
-    lastPause = paused
-
-    local _, _, isPaused = spGetGameSpeed()
-    if isPaused or (now - prevGameFrameTime > 1.2 and Spring.GetGameFrame() > 0) then    -- when host (admin) paused its just gamespeed 0
-        paused = true
-    else
-        paused = false
-    end
-end
 
 function widget:Initialize()
   vsx, vsy = widgetHandler:GetViewSizes()
@@ -154,9 +119,9 @@ function widget:Initialize()
   
   myFont = glLoadFont( fontPath, fontSizeHeadline )
    
-
-  local _, gameSpeed, isPaused = spGetGameSpeed()
-  if isPaused or gameSpeed == 0 then    -- when host admin paused its just gamespeed 0
+   
+  local _, _, isPaused = spGetGameSpeed()
+  if isPaused then
       paused = true
   end
 
@@ -190,6 +155,26 @@ end
 function widget:DrawScreen()
   if Spring.IsGUIHidden() then return end
     local now = osClock()
+    previousDrawScreenClock = now
+    
+    local diffPauseTime = ( now - pauseTimestamp)
+    
+    if ( ( not paused and lastPause ) or ( paused and not lastPause ) ) then
+        --pause switch
+        pauseTimestamp = osClock()
+        if ( diffPauseTime <= slideTime ) then
+            pauseTimestamp = pauseTimestamp - ( slideTime - ( diffPauseTime / slideTime ) * slideTime )
+        end
+    end
+    
+    if ( paused and not lastPause ) then
+        --new pause
+        if widgetInitTime + 5 > now then        -- so if you do /luaui reload when paused, it wont re-animate
+            pauseTimestamp = now - (slideTime + autoFadeTime)
+        end
+    end
+    
+    lastPause = paused
     
     if ( paused or ( ( now - pauseTimestamp) <= slideTime ) ) then
         showPauseScreen = true

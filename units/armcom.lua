@@ -108,7 +108,6 @@ tablearmcom = {
 		-- [22] = "armsonar",
 		[22] = "armfdrag",
 		[23] = "armtl",
-		[24] = "armgplat",
 		[25] = "armfrt",
 		[26] = "armfrad",
 	},

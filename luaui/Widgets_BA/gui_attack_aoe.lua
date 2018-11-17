@@ -20,7 +20,6 @@ end
 --------------------------------------------------------------------------------
 local numScatterPoints     = 32
 local aoeColor             = {1, 0, 0, 1}
-local aoeColorNoEnergy     = {1, 1, 0, 1}
 local aoeLineWidthMult     = 64
 local scatterColor         = {1, 1, 0, 1}
 local scatterLineWidthMult = 1024
@@ -193,7 +192,7 @@ local function SetupUnitDef(unitDefID, unitDef)
       local weaponDef = WeaponDefs[weapon.weaponDef]
       if (weaponDef) then
         if (weaponDef.type == "DGun") then
-          dgunInfo[unitDefID] = {range = dgunRange, aoe = weaponDef.damageAreaOfEffect, unitname=unitDef.name, requiredEnergy=unitDef.energyCost}
+          dgunInfo[unitDefID] = {range = dgunRange, aoe = weaponDef.damageAreaOfEffect, unitname=unitDef.name}
         elseif (weaponDef.canAttackGround
                 and not (weaponDef.type == "Shield")
                 and not ToBool(weaponDef.interceptor)
@@ -256,10 +255,7 @@ local function SetupUnitDef(unitDefID, unitDef)
   else
     aoeDefInfo[unitDefID] = {type = "direct", scatter = scatter, range = maxWeaponDef.range}
   end
-  if maxWeaponDef.energyCost > 0 then
-    aoeDefInfo[unitDefID].requiredEnergy = maxWeaponDef.energyCost
-  end
-
+  
   aoeDefInfo[unitDefID].aoe = aoe
   aoeDefInfo[unitDefID].cost = cost
   aoeDefInfo[unitDefID].mobile = mobile
@@ -315,18 +311,14 @@ end
 --aoe
 --------------------------------------------------------------------------------
 
-local function DrawAoE(tx, ty, tz, aoe, ee, alphaMult, offset, requiredEnergy)
+local function DrawAoE(tx, ty, tz, aoe, ee, alphaMult, offset)
   glLineWidth(aoeLineWidthMult * aoe / mouseDistance)
   
   for i=1,numAoECircles do
     local proportion = i / (numAoECircles + 1)
     local radius = aoe * proportion
     local alpha = aoeColor[4] * (1 - proportion) / (1 - proportion * ee) * (1 - GetSecondPart(offset or 0)) * (alphaMult or 1)
-    if requiredEnergy and select(1, Spring.GetTeamResources(Spring.GetMyTeamID(), 'energy')) < requiredEnergy then
-      glColor(aoeColorNoEnergy[1], aoeColorNoEnergy[2], aoeColorNoEnergy[3], alpha)
-    else
-      glColor(aoeColor[1], aoeColor[2], aoeColor[3], alpha)
-    end
+    glColor(aoeColor[1], aoeColor[2], aoeColor[3], alpha)
     DrawCircle(tx, ty, tz, radius)
   end
 
@@ -337,7 +329,7 @@ end
 --------------------------------------------------------------------------------
 --dgun/noexplode
 --------------------------------------------------------------------------------
-local function DrawNoExplode(aoe, fx, fy, fz, tx, ty, tz, range, requiredEnergy)
+local function DrawNoExplode(aoe, fx, fy, fz, tx, ty, tz, range)
   
   local dx = tx - fx
   local dy = ty - fy
@@ -358,14 +350,8 @@ local function DrawNoExplode(aoe, fx, fy, fz, tx, ty, tz, range, requiredEnergy)
   local vertices = {{fx + wx, fy, fz + wz}, {fx + ex + wx, ty, fz + ez + wz},
                     {fx - wx, fy, fz - wz}, {fx + ex - wx, ty, fz + ez - wz}}
   local alpha = (1 - GetSecondPart()) * aoeColor[4]
-
-  if requiredEnergy and select(1, Spring.GetTeamResources(Spring.GetMyTeamID(), 'energy')) < requiredEnergy then
-    glColor(aoeColorNoEnergy[1], aoeColorNoEnergy[2], aoeColorNoEnergy[3], alpha)
-  else
-    glColor(aoeColor[1], aoeColor[2], aoeColor[3], alpha)
-  end
-
-  glLineWidth(1 + (scatterLineWidthMult / mouseDistance))
+  glColor(aoeColor[1], aoeColor[2], aoeColor[3], alpha)
+  glLineWidth(scatterLineWidthMult / mouseDistance)
   
   glBeginEnd(GL_LINES, VertexList, vertices)
 
@@ -581,7 +567,7 @@ local function DrawDroppedScatter(aoe, ee, scatter, v, fx, fy, fz, tx, ty, tz, s
     
     DrawAoE(px_c, py_c, pz_c, aoe, ee, alphaMult, -delay)
     glColor(scatterColor[1], scatterColor[2], scatterColor[3], scatterColor[4] * alphaMult)
-    glLineWidth(0.5 + scatterLineWidthMult / mouseDistance)
+    glLineWidth(scatterLineWidthMult / mouseDistance)
     DrawCircle(px_c, py_c, pz_c, currScatter)
   end
   glColor(1,1,1,1)
@@ -653,10 +639,10 @@ function widget:DrawWorld()
       dx = fx + offset_x
       dz = fz + offset_z
     end
-    DrawNoExplode(info.aoe, dx, fy, dz, tx, ty, tz, info.range+(info.aoe*0.7), info.requiredEnergy)
+    DrawNoExplode(info.aoe, dx, fy, dz, tx, ty, tz, info.range)
     glColor(1, 0, 0, 0.75)
-    glLineWidth(1.5)
-	glDrawGroundCircle(fx, fy, fz, info.range+(info.aoe*0.7), circleDivs)
+    glLineWidth(1)
+	glDrawGroundCircle(fx, fy, fz, info.range, circleDivs)
     glColor(1,1,1,1)
     return
   end
@@ -688,25 +674,25 @@ function widget:DrawWorld()
     else
       trajectory = -1
     end
-    DrawAoE(tx, ty, tz, info.aoe, info.ee, info.requiredEnergy)
+    DrawAoE(tx, ty, tz, info.aoe, info.ee)
     DrawBallisticScatter(info.scatter, info.v, fx, fy, fz, tx, ty, tz, trajectory, info.range)
   elseif (weaponType == "noexplode") then
-    DrawNoExplode(info.aoe, fx, fy, fz, tx, ty, tz, info.range, info.requiredEnergy)
+    DrawNoExplode(info.aoe, fx, fy, fz, tx, ty, tz, info.range)
   elseif (weaponType == "tracking") then
-    DrawAoE(tx, ty, tz, info.aoe, info.ee, info.requiredEnergy)
+    DrawAoE(tx, ty, tz, info.aoe, info.ee)
   elseif (weaponType == "direct") then
-    DrawAoE(tx, ty, tz, info.aoe, info.ee, info.requiredEnergy)
+    DrawAoE(tx, ty, tz, info.aoe, info.ee)
     DrawDirectScatter(info.scatter, fx, fy, fz, tx, ty, tz, info.range, GetUnitRadius(aoeUnitID))
   elseif (weaponType == "dropped") then
     DrawDroppedScatter(info.aoe, info.ee, info.scatter, info.v, fx, info.h, fz, tx, ty, tz, info.salvoSize, info.salvoDelay)
   elseif (weaponType == "wobble") then
-    DrawAoE(tx, ty, tz, info.aoe, info.ee, info.requiredEnergy)
+    DrawAoE(tx, ty, tz, info.aoe, info.ee)
     DrawWobbleScatter(info.scatter, fx, fy, fz, tx, ty, tz, info.rangeScatter, info.range)
   elseif (weaponType == "orbital") then
-    DrawAoE(tx, ty, tz, info.aoe, info.ee, info.requiredEnergy)
+    DrawAoE(tx, ty, tz, info.aoe, info.ee)
     DrawOrbitalScatter(info.scatter, tx, ty, tz)
   else
-    DrawAoE(tx, ty, tz, info.aoe, info.ee, info.requiredEnergy)
+    DrawAoE(tx, ty, tz, info.aoe, info.ee)
   end
 end
 

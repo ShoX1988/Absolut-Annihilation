@@ -23,7 +23,7 @@ end
 --
 ]]--
 
-local maxNanoParticles = 4000
+local maxNanoParticles = 2000
 
 local cameraTransitionTime = 0.2
 local cameraPanTransitionTime = 0.03
@@ -112,6 +112,8 @@ local widgetOptionColor = '\255\160\160\160'
 
 local luaShaders = tonumber(Spring.GetConfigInt("ForceShaders",1) or 0)
 
+local minimapIconsize = 2.5	-- spring wont remember what you set with '/minimap iconssize #'
+
 local presetNames = {'lowest','low','medium','high','ultra'}	-- defined so these get listed in the right order
 local presets = {
 	lowest = {
@@ -123,11 +125,10 @@ local presets = {
 		lighteffects_deferred = false,
 		lighteffects_heatdistortion = false,
 		lups = false,
-		lupsreflectionrefraction = false,
 		snow = false,
 		xrayshader = false,
 		particles = 10000,
-		nanoparticles = 1500,
+		nanoparticles = 1000,
 		nanobeamamount = 2,
 		grassdetail = 0,
 		treeradius = 0,
@@ -153,12 +154,11 @@ local presets = {
 		lighteffects_deferred = false,
 		lighteffects_heatdistortion = false,
 		lups = true,
-		lupsreflectionrefraction = false,
 		snow = false,
 		xrayshader = false,
 		particles = 15000,
-		nanoparticles = 3000,
-		nanobeamamount = 4,
+		nanoparticles = 2000,
+		nanobeamamount = 3,
 		grassdetail = 0,
 		treeradius = 200,
 		treewind = false,
@@ -183,12 +183,11 @@ local presets = {
 		lighteffects_deferred = true,
 		lighteffects_heatdistortion = true,
 		lups = true,
-		lupsreflectionrefraction = false,
 		snow = true,
 		xrayshader = false,
 		particles = 20000,
-		nanoparticles = 5000,
-		nanobeamamount = 7,
+		nanoparticles = 3500,
+		nanobeamamount = 4,
 		grassdetail = 0,
 		treeradius = 400,
 		treewind = true,
@@ -213,12 +212,11 @@ local presets = {
 		lighteffects_deferred = true,
 		lighteffects_heatdistortion = true,
 		lups = true,
-		lupsreflectionrefraction = true,
 		snow = true,
 		xrayshader = false,
 		particles = 25000,
-		nanoparticles = 9000,
-		nanobeamamount = 12,
+		nanoparticles = 5000,
+		nanobeamamount = 5,
 		grassdetail = 0,
 		treeradius = 800,
 		treewind = true,
@@ -243,12 +241,11 @@ local presets = {
 		lighteffects_deferred = true,
 		lighteffects_heatdistortion = true,
 		lups = true,
-		lupsreflectionrefraction = true,
 		snow = true,
 		xrayshader = false,
 		particles = 30000,
-		nanoparticles = 15000,
-		nanobeamamount = 20,
+		nanoparticles = 10000,
+		nanobeamamount = 7,
 		grassdetail = 0,
 		treeradius = 800,
 		treewind = true,
@@ -769,30 +766,9 @@ function widget:Update(dt)
 			end
 			windowList = gl.CreateList(DrawWindow)
 		end
-		options[getOptionByID('sndvolmaster')].value = tonumber(Spring.GetConfigInt("snd_volmaster",40) or 40)	-- update value because other widgets can adjust this too
+		options[getOptionByID('sndvolmaster')].value = tonumber(Spring.GetConfigInt("snd_volmaster",1) or 100)	-- update value because other widgets can adjust this too
 		if getOptionByID('sndvolmusic') then
-			options[getOptionByID('sndvolmusic')].value = tonumber(Spring.GetConfigInt("snd_volmusic",40) or 40)
-		end
-	end
-end
-
-function widget:CommandNotify(cmdID, cmdParams, cmdOptions)
-	if show then
-		--on window
-		local rectX1 = ((screenX-bgMargin) * widgetScale) - ((vsx * (widgetScale-1))/2)
-		local rectY1 = ((screenY+bgMargin) * widgetScale) - ((vsy * (widgetScale-1))/2)
-		local rectX2 = ((screenX+screenWidth+bgMargin) * widgetScale) - ((vsx * (widgetScale-1))/2)
-		local rectY2 = ((screenY-screenHeight-bgMargin) * widgetScale) - ((vsy * (widgetScale-1))/2)
-		local x,y,ml = Spring.GetMouseState()
-		local cx, cy = correctMouseForScaling(x,y)
-		if IsOnRect(x, y, rectX1, rectY2, rectX2, rectY1) then
-			return true
-		elseif groupRect ~= nil then
-			for id,group in pairs(optionGroups) do
-				if IsOnRect(cx, cy, groupRect[id][1], groupRect[id][2], groupRect[id][3], groupRect[id][4]) then
-					return true
-				end
-			end
+			options[getOptionByID('sndvolmusic')].value = tonumber(Spring.GetConfigInt("snd_volmusic",1) or 100)
 		end
 	end
 end
@@ -828,24 +804,7 @@ function widget:DrawScreen()
   end
   
   if show or showOnceMore then
-
-	  --on window
-	  local rectX1 = ((screenX-bgMargin) * widgetScale) - ((vsx * (widgetScale-1))/2)
-	  local rectY1 = ((screenY+bgMargin) * widgetScale) - ((vsy * (widgetScale-1))/2)
-	  local rectX2 = ((screenX+screenWidth+bgMargin) * widgetScale) - ((vsx * (widgetScale-1))/2)
-	  local rectY2 = ((screenY-screenHeight-bgMargin) * widgetScale) - ((vsy * (widgetScale-1))/2)
-	  local x,y,ml = Spring.GetMouseState()
-	  local cx, cy = correctMouseForScaling(x,y)
-	  if IsOnRect(x, y, rectX1, rectY2, rectX2, rectY1) then
-	  	Spring.SetMouseCursor('cursornormal')
-	  elseif groupRect ~= nil then
-		  for id,group in pairs(optionGroups) do
-			  if IsOnRect(cx, cy, groupRect[id][1], groupRect[id][2], groupRect[id][3], groupRect[id][4]) then
-				  Spring.SetMouseCursor('cursornormal')
-				  break
-			  end
-		  end
-	  end
+  	
 		-- draw the options panel
 		glPushMatrix()
 			glTranslate(-(vsx * (widgetScale-1))/2, -(vsy * (widgetScale-1))/2, 0)
@@ -1050,8 +1009,10 @@ function applyOptionValue(i, skipRedrawWindow)
 			Spring.SetConfigInt("NormalMapping",value)
 		elseif id == 'lupsdynamic' then
 			Spring.SetConfigInt("DynamicLups",value)
-		elseif id == 'lupsreflectionrefraction' then
-			Spring.SetConfigInt("lupsreflectionrefraction",value)
+		elseif id == 'lupsrefraction' then
+			Spring.SetConfigInt("lupsenablerefraction",value)
+		elseif id == 'lupsreflection' then
+			Spring.SetConfigInt("lupsenablereflection",value)
 		elseif id == 'treewind' then
 			Spring.SendCommands("luarules treewind "..value)
 			Spring.SetConfigInt("TreeWind",value)
@@ -1160,18 +1121,10 @@ function applyOptionValue(i, skipRedrawWindow)
 			saveOptionValue('Light Effects', 'lighteffects', 'setHeatDistortion', {'enableHeatDistortion'}, options[i].value)
 		elseif id == 'lighteffects_nanolaser' then
 			saveOptionValue('Light Effects', 'lighteffects', 'setNanolaser', {'enableNanolaser'}, options[i].value)
-		elseif id == 'nanobeamicon' then
-			Spring.SendCommands("luarules uniticonlasers "..value)
 		elseif id == 'lighteffects_thrusters' then
 			saveOptionValue('Light Effects', 'lighteffects', 'setThrusters', {'enableThrusters'}, options[i].value)
 		elseif id == 'lighteffects_deferred' then
 			saveOptionValue('Light Effects', 'lighteffects', 'setDeferred', {'enableDeferred'}, options[i].value)
-		elseif id == 'passivebuilders_nanos' then
-			saveOptionValue('Passive builders', 'passivebuilders', 'setPassiveNanos', {'passiveNanos'}, options[i].value)
-		elseif id == 'passivebuilders_cons' then
-			saveOptionValue('Passive builders', 'passivebuilders', 'setPassiveCons', {'passiveCons'}, options[i].value)
-		elseif id == 'passivebuilders_labs' then
-			saveOptionValue('Passive builders', 'passivebuilders', 'setPassiveLabs', {'passiveLabs'}, options[i].value)
 		elseif id == 'defrange_allyair' then
 			if widgetHandler.configData["Defense Range"] == nil then
 				widgetHandler.configData["Defense Range"] = {}
@@ -1291,7 +1244,7 @@ function applyOptionValue(i, skipRedrawWindow)
 			else
 				Spring.SetConfigInt("MSAALevel",0)
 			end
-			Spring.SetConfigInt("FSAALevel",0)		-- engine deprecated it in 104.x
+			Spring.SetConfigInt("FSAALevel",0)
 			Spring.SetConfigInt("MSAALevel",value)
 		elseif id == 'shadowslider' then
 			local enabled = 1
@@ -1300,20 +1253,6 @@ function applyOptionValue(i, skipRedrawWindow)
 			end
 			Spring.SendCommands("shadows "..enabled.." "..value)
 			Spring.SetConfigInt("shadows", value)
-		elseif id == 'shadows_maxquality' then
-			if value < options[getOptionByID('shadows_minquality')].value then
-				options[getOptionByID('shadows_minquality')].value = value
-				saveOptionValue('Shadow Quality Manager', 'shadowmanager', 'setMinQuality', {'maxQuality'}, value)
-			end
-			saveOptionValue('Shadow Quality Manager', 'shadowmanager', 'setMaxQuality', {'maxQuality'}, value)
-		elseif id == 'shadows_minquality' then
-			if value > options[getOptionByID('shadows_maxquality')].value then
-				options[getOptionByID('shadows_maxquality')].value = value
-				saveOptionValue('Shadow Quality Manager', 'shadowmanager', 'setMaxQuality', {'maxQuality'}, value)
-			end
-			saveOptionValue('Shadow Quality Manager', 'shadowmanager', 'setMinQuality', {'minQuality'}, value)
-		elseif id == 'shadows_disablefps' then
-			saveOptionValue('Shadow Quality Manager', 'shadowmanager', 'setDisableFps', {'disableFps'}, value)
 		elseif id == 'decals' then
 			Spring.SetConfigInt("GroundDecals", value)
 			Spring.SendCommands("GroundDecals "..value)
@@ -1329,8 +1268,6 @@ function applyOptionValue(i, skipRedrawWindow)
 				Spring.SendCommands("distdraw 10000")
 			end
 			Spring.SendCommands("disticon "..value)
-		elseif id == 'iconscale' then
-			Spring.SendCommands("luarules uniticonscale "..value)
 		elseif id == 'treeradius' then
 			Spring.SetConfigInt("TreeRadius",value)
 		elseif id == 'particles' then
@@ -1387,8 +1324,7 @@ function applyOptionValue(i, skipRedrawWindow)
 			saveOptionValue('Depth of Field', 'dof', 'setIntensity', {'intensity'}, value)
 		elseif id == 'minimapiconsize' then
 			minimapIconsize = value
-			Spring.SetConfigFloat("MinimapIconScale", value)
-			Spring.SendCommands("minimap unitsize "..value)		-- spring wont remember what you set with '/minimap iconssize #'
+			Spring.SendCommands("minimap unitsize "..value)
 		elseif id == 'lighteffects_brightness' then
 			saveOptionValue('Light Effects', 'lighteffects', 'setGlobalBrightness', {'globalLightMult'}, value)
 		elseif id == 'lighteffects_radius' then
@@ -1444,8 +1380,6 @@ function applyOptionValue(i, skipRedrawWindow)
 			else
 				Spring.SetConfigInt("MaxNanoParticles",maxNanoParticles)
 			end
-		elseif id == 'iconset' then
-			Spring.SendCommands("luarules uniticonset "..options[i].options[value])
 		elseif id == 'camera' then
 			Spring.SetConfigInt("CamMode",(value-1))
 			if value == 1 then 
@@ -1794,7 +1728,7 @@ function GetWidgetToggleValue(widgetname)
 	end
 end
 
--- configVar = table, add more entries the deeper the configdata table var is: example: {'Config','console','maxlines'}  (limit = 3 deep)
+
 function loadWidgetData(widgetName, optionId, configVar)
 	if widgetHandler.knownWidgets[widgetName] ~= nil then
 		if getOptionByID(optionId) and widgetHandler.configData[widgetName] ~= nil and widgetHandler.configData[widgetName][configVar[1]] ~= nil then
@@ -1818,10 +1752,6 @@ end
 -- loads values via stored game config in luaui/configs
 function loadAllWidgetData()
 	loadWidgetData("Health Bars", "healthbarsscale", {'barScale'})
-
-	loadWidgetData("Shadow Quality Manager", "shadows_maxquality", {'maxQuality'})
-	loadWidgetData("Shadow Quality Manager", "shadows_minquality", {'minQuality'})
-	loadWidgetData("Shadow Quality Manager", "shadows_disablefps", {'disableFps'})
 
 	loadWidgetData("Bloom Shader", "bloombrightness", {'basicAlpha'})
 	loadWidgetData("Bloom Shader", "bloomhighlights", {'drawHighlights'})
@@ -1873,10 +1803,6 @@ function loadAllWidgetData()
 	loadWidgetData("Fancy Selected Units", "fancyselectedunits_secondline", {'showSecondLine'})
 
 	loadWidgetData("Voice Notifs", "voicenotifs_volume", {'volume'})
-
-	loadWidgetData("Passive builders", "passivebuilders_nanos", {'passiveNanos'})
-	loadWidgetData("Passive builders", "passivebuilders_cons", {'passiveCons'})
-	loadWidgetData("Passive builders", "passivebuilders_labs", {'passiveLabs'})
 
 	loadWidgetData("Defense Range", "defrange_allyair", {'enabled','ally','air'})
 	loadWidgetData("Defense Range", "defrange_allyground", {'enabled','ally','ground'})
@@ -1958,15 +1884,11 @@ function init()
 		{id="advmapshading", group="gfx", name="Advanced map shading", type="bool", value=tonumber(Spring.GetConfigInt("AdvMapShading",1) or 1) == 1, description='When disabled: map shadows aren\'t rendered as well'},
 		{id="advmodelshading", group="gfx", name="Advanced model shading", type="bool", value=tonumber(Spring.GetConfigInt("AdvModelShading",1) or 1) == 1},
 		{id="normalmapping", group="gfx", name="Extra unit shading", type="bool", value=tonumber(Spring.GetConfigInt("NormalMapping",1) or 1) == 1, description='Adds highlights/darker areas, and even blinking lights to some units'},
+		{id="advsky", group="gfx", name="Advanced sky", type="bool", value=tonumber(Spring.GetConfigInt("AdvSky",1) or 1) == 1, description='Enables high resolution clouds\n\nChanges will be applied next game'},
 
 		-- only one of these shadow options are shown, depending if "Shadow Quality Manager" widget is active
 		{id="shadows", group="gfx", name="Shadows", type="bool", value=tonumber(Spring.GetConfigInt("Shadows",1) or 1) == 1, description='Shadow detail is currently controlled by "Shadow Quality Manager" widget\n...this widget will auto reduce detail when fps gets low.\n\nShadows requires "Advanced map shading" option to be enabled'},
 		{id="shadowslider", group="gfx", name="Shadows", type="slider", min=1500, max=6000, step=500, value=tonumber(Spring.GetConfigInt("ShadowMapSize",1) or 2000), description='Set shadow detail\nSlider positioned the very left means shadows will be disabled\n\nShadows requires "Advanced map shading" option to be enabled'},
-		{id="shadows_maxquality", group="gfx", name=widgetOptionColor.."   max quality", min=2000, max=8000, step=500, type="slider", value=8000, description='Maximum shadow detail when having high Frames Per Second'},
-		{id="shadows_minquality", group="gfx", name=widgetOptionColor.."   min quality", min=2000, max=8000, step=500, type="slider", value=2000, description='Minimum shadow detail when having low Frames Per Second'},
-		{id="shadows_disablefps", group="gfx", name=widgetOptionColor.."   disable at FPS", min=0, max=30, step=1, type="slider", value=0, description='Automaticly disables shadows at this average FPS value'},
-
-		{id="advsky", group="gfx", name="Advanced sky", type="bool", value=tonumber(Spring.GetConfigInt("AdvSky",1) or 1) == 1, description='Enables high resolution clouds\n\nChanges will be applied next game'},
 
 		{id="decals", group="gfx", name="Ground decals", type="slider", min=0, max=5, step=1, value=tonumber(Spring.GetConfigInt("GroundDecals",1) or 1), description='Set how long map decals will stay.\n\nDecals are ground scars, footsteps/tracks and shading under buildings'},
 		{id="grounddetail", group="gfx", name="Ground detail", type="slider", min=60, max=200, step=1, value=tonumber(Spring.GetConfigInt("GroundDetail",1) or 1), description='Set how detailed the map mesh/model is'},
@@ -1976,10 +1898,7 @@ function init()
 
 		{id="particles", group="gfx", name="Max particles", type="slider", min=10000, max=30000, step=1000, value=tonumber(Spring.GetConfigInt("MaxParticles",1) or 15000), description='Particles used for explosions, smoke, fire and missiletrails\n\nSetting a low value will mean that various effects wont show properly'},
 
-		{id="iconset", group="gfx", name="Icon set", type="select", options={'old','modern','modern_simplified'}, value=1, description='NOTE: when icon edges look jagged: enable more Anti-Aliasing\n...or pick the \'old\' iconset'},
-		{id="disticon", group="gfx", name=widgetOptionColor.."   render distance", type="slider", min=0, max=900, step=10, value=tonumber(Spring.GetConfigInt("UnitIconDist",1) or 400), description='Set a lower value to get better performance'},
-		{id="iconscale", group="gfx", name=widgetOptionColor.."   scale", type="slider", min=0.85, max=1.35, step=0.05, value=tonumber(Spring.GetConfigFloat("UnitIconScale",1.15) or 1.05), description='Note that the minimap icon size is affected as well'},
-		{id="minimapiconsize", group="gfx", name=widgetOptionColor.."   minimap scale", type="slider", min=1.5, max=5, step=0.25, value=tonumber(Spring.GetConfigFloat("MinimapIconScale",3.5) or 1), description=''},
+		{id="disticon", group="gfx", name="Icon render distance", type="slider", min=0, max=900, step=10, value=tonumber(Spring.GetConfigInt("UnitIconDist",1) or 400), description='Set a lower value to get better performance'},
 
 		{id="outline", group="gfx", widget="Outline", name="Unit outline (expensive)", type="bool", value=GetWidgetToggleValue("Outline"), description='Adds a small outline to all units which makes them crisp\n\nLimits total outlined units to 1000.\nStops rendering outlines when average fps falls below 13.'},
 		{id="outline_size", group="gfx", name=widgetOptionColor.."   thickness", min=0.8, max=1.5, step=0.05, type="slider", value=1, description='Set the size of the outline'},
@@ -1990,6 +1909,10 @@ function init()
 
 		{id="darkenmap", group="gfx", name="Darken map", min=0, max=0.5, step=0.01, type="slider", value=0, description='Darkens the whole map (not the units)\n\nRemembers setting per map\nUse /resetmapdarkness if you want to reset all stored map settings'},
 		{id="darkenmap_darkenfeatures", group="gfx", name=widgetOptionColor.."   darken features", type="bool", value=false, description='Darkens features (trees, wrecks, ect..) along with darken map slider above\n\nNOTE: This setting can be CPU intensive because it cycles through all visible features \nand renders then another time.'},
+
+		{id="underconstructiongfx", group="gfx", widget="Under construction gfx", name="Under construction highlight", type="bool", value=GetWidgetToggleValue("Under construction gfx"), description='Highlights unit models when under construction'},
+		{id="underconstructiongfx_opacity", group="gfx", name=widgetOptionColor.."   opacity", min=0.25, max=0.5, step=0.01, type="slider", value=0.2, description='Set the opacity of the highlight on selected units'},
+		{id="underconstructiongfx_shader", group="gfx", name=widgetOptionColor.."   use shader", type="bool", value=false, description='Highlight model edges a bit'},
 
 		{id="lighteffects", group="gfx", name="Lights", type="bool", value=GetWidgetToggleValue("Light Effects"), description='Adds lights to projectiles, lasers and explosions.\n\nRequires shaders.'},
 		{id="lighteffects_deferred", group="gfx", name=widgetOptionColor.."   real lights", type="bool", value=true, description='Otherwise simple ground flashes instead of actual map and model lighting.\n\nExpensive for the gpu when lots of (big) lights are there or when you zoom in on them.'},
@@ -2002,17 +1925,13 @@ function init()
 
 		{id="nanoeffect", group="gfx", name="Nano effect", type="select", options={'beam','particles'}, value=tonumber(Spring.GetConfigInt("NanoEffect",1) or 1), description='Sets nano effect\n\nBeams more expensive than particles'},
 		{id="lighteffects_nanolaser", group="gfx", name=widgetOptionColor.."   beam light  (needs 'Lights')", type="bool", value=true, description='Shows a light for every build/reclaim nanolaser'},
-		{id="nanobeamicon", group="gfx", name=widgetOptionColor.."   beam when uniticon", type="bool", value=tonumber(Spring.GetConfigInt("NanoLaserIcon",0) or 0) == 1, description='Shows nano beams when unit is displayed as icon'},
-		{id="nanobeamamount", group="gfx", name=widgetOptionColor.."   beam amount", type="slider", min=2, max=20, step=1, value=tonumber(Spring.GetConfigInt("NanoBeamAmount",6) or 6), description='Not number of total beams (but total of new beams per gameframe)\n\nBeams aren\'t cheap so lower this setting for better performance'},
-		{id="nanoparticles", group="gfx", name=widgetOptionColor.."   max nano particles", type="slider", min=1000, max=15000, step=100, value=maxNanoParticles, description=''},
+		{id="nanobeamamount", group="gfx", name=widgetOptionColor.."   beam amount", type="slider", min=2, max=7, step=1, value=tonumber(Spring.GetConfigInt("NanoBeamAmount",3) or 3), description='Not number of total beams (but total of new beams per gameframe)\n\nBeams aren\'t cheap so lower this setting for better performance'},
+		{id="nanoparticles", group="gfx", name=widgetOptionColor.."   max nano particles", type="slider", min=1000, max=10000, step=100, value=maxNanoParticles, description=''},
 
 		{id="lups", group="gfx", widget="LupsManager", name="Particle / shader FX", type="bool", value=GetWidgetToggleValue("LupsManager"), description='Toggle unit particle effects: jet engine thrusters, ground flashes, fusion energy balls'},
-		{id="lupsreflectionrefraction", group="gfx", name=widgetOptionColor.."   reflection and refraction pass", type="bool", value=tonumber(Spring.GetConfigInt("lupsreflectionrefraction",1) or 0) == 1, description='The settings seem only relevant near water\nand disabling them reduces draw passes'},
+		{id="lupsrefraction", group="gfx", name=widgetOptionColor.."   refraction pass", type="bool", value=tonumber(Spring.GetConfigInt("lupsenablerefraction",1) or 0) == 1, description='The settings seem only relevant near water\nand disabling them reduces draw passes\n\nLuaUI RESTART NEEDED'},
+		{id="lupsreflection", group="gfx", name=widgetOptionColor.."   reflection pass", type="bool", value=tonumber(Spring.GetConfigInt("lupsenablereflection",1) or 0) == 1, description='The settings seem only relevant near water\nand disabling them reduces draw passes\n\nLuaUI RESTART NEEDED'},
 		{id="lighteffects_thrusters", group="gfx", name=widgetOptionColor.."   air thrusters light  (needs 'Lights')", type="bool", value=true, description='Shows a light for air engine thrusters (fighters and scouts excluded)'},
-
-		{id="underconstructiongfx", group="gfx", widget="Under construction gfx", name="Under construction shader", type="bool", value=GetWidgetToggleValue("Under construction gfx"), description='Highlights unit models when under construction'},
-		{id="underconstructiongfx_opacity", group="gfx", name=widgetOptionColor.."   opacity", min=0.25, max=0.5, step=0.01, type="slider", value=0.2, description='Set the opacity of the highlight on selected units'},
-		{id="underconstructiongfx_shader", group="gfx", name=widgetOptionColor.."   use shader", type="bool", value=false, description='Highlight model edges a bit'},
 
 		{id="xrayshader", group="gfx", widget="XrayShader", name="Unit xray shader", type="bool", value=GetWidgetToggleValue("XrayShader"), description='Highlights all units, highlight effect dissolves on close camera range.\n\nFades out and disables at low fps\nWorks less on dark teamcolors'},
 
@@ -2065,6 +1984,8 @@ function init()
 		-- UI
 		{id="teamcolors", group="ui", widget="Player Color Palette", name="Team colors based on a palette", type="bool", value=GetWidgetToggleValue("Player Color Palette"), description='Replaces lobby team colors for a color palette based one\n\nNOTE: reloads all widgets because these need to update their teamcolors'},
 		{id="sameteamcolors", group="ui", name=widgetOptionColor.."   same team colors", type="bool", value=(WG['playercolorpalette']~=nil and WG['playercolorpalette'].getSameTeamColors~=nil and WG['playercolorpalette'].getSameTeamColors()), description='Use the same teamcolor for all the players in a team\n\nNOTE: reloads all widgets because these need to update their teamcolors'},
+
+		{id="minimapiconsize", group="ui", name="Minimap icon size", type="slider", min=2, max=3.5, step=0.25, value=minimapIconsize, description=''},
 		{id="simpleminimapcolors", group="ui", name="Simple minimap colors", type="bool", value=tonumber(Spring.GetConfigInt("SimpleMiniMapColors",0) or 0) == 1, description="Enable simple minimap teamcolors\nRed is enemy,blue is ally and you are green!"},
 
 		{id="showbuilderqueue", group="ui", widget="Show builder queue", name="Show Builder Queue", type="bool", value=GetWidgetToggleValue("Show Builder Queue"), description='Shows ghosted buildings about to be built on the map'},
@@ -2144,9 +2065,6 @@ function init()
 		{id="fightersfly", group="game", widget="Set fighters on Fly mode", name="Set fighters on Fly mode", type="bool", value=GetWidgetToggleValue("Set fighters on Fly mode"), description='Setting fighters on Fly mode when created'},
 
 		{id="passivebuilders", group="game", widget="Passive builders", name="Passive builders", type="bool", value=GetWidgetToggleValue("Passive builders"), description='Sets builders (nanos, labs and cons) on passive mode\n\nPassive mode means that builders will only spend energy when its availible.\nUsage: You could set your most important builders on active and leave the rest on passive'},
-		{id="passivebuilders_nanos", group="game", name=widgetOptionColor.."   nanos", type="bool", value=(WG['passivebuilders']~=nil and WG['passivebuilders'].getPassiveNanos~=nil and WG['passivebuilders'].getPassiveNanos()), description=''},
-		{id="passivebuilders_cons", group="game", name=widgetOptionColor.."   cons", type="bool", value=(WG['passivebuilders']~=nil and WG['passivebuilders'].getPassiveCons~=nil and WG['passivebuilders'].getPassiveCons()), description=''},
-		{id="passivebuilders_labs", group="game", name=widgetOptionColor.."   labs", type="bool", value=(WG['passivebuilders']~=nil and WG['passivebuilders'].getPassiveLabs~=nil and WG['passivebuilders'].getPassiveLabs()), description=''},
 
 		{id="autocloakpopups", group="game", widget="Auto Cloak Popups", name="Auto cloak popups", type="bool", value=GetWidgetToggleValue("Auto Cloak Popups"), description='Auto cloaks Pit Bull and Ambusher'},
 
@@ -2160,34 +2078,7 @@ function init()
 
         {id="transportai", group="game", widget="Transport AI", name="Transport AI", type="bool", value=GetWidgetToggleValue("Transport AI"), description='Transport units automatically pick up new units going to factory waypoint.'},
 		{id="settargetdefault", group="game", widget="Set target default", name="Set-target as default", type="bool", value=GetWidgetToggleValue("Set target default"), description='Replace default attack command to a set-target command\n(when rightclicked on enemy unit)'},
-		{id="dgunnogroundenemies", group="game", widget="DGun no ground enemies", name="Dont snap DGun to ground units", type="bool", value=GetWidgetToggleValue("DGun no ground enemies"), description='Prevents dgun aim to snap onto enemy ground units, holding SHIFT will still target units\n\nWill still snap to air, ships and hovers (when on water)'},
 	}
-
-	-- fsaa is deprecated in 104.x
-	if tonumber(Spring.GetConfigInt("FSAALevel",0)) > 0 then
-		local fsaa = tonumber(Spring.GetConfigInt("FSAALevel",0))
-		if fsaa > options[getOptionByID('msaa')].max then
-			fsaa = options[getOptionByID('msaa')].max
-		end
-		Spring.SetConfigInt("MSAALevel", fsaa)
-		Spring.SetConfigInt("FSAALevel", 0)
-	end
-
-	if options[getOptionByID('iconset')] and #VFS.SubDirs('icons') > 1 then
-		local opts = {}
-		local optsValues = {}
-		for i, v in pairs(VFS.SubDirs('icons')) do
-			if optsValues[string.sub(v, 7, #v-1)] == nil then	-- to prevent duplicated when gamefolder and spring folder have the same icons subfolder
-				optsValues[string.sub(v, 7, #v-1)] = i
-				opts[i] = string.sub(v, 7, #v-1)
-			end
-		end
-		options[getOptionByID('iconset')].options = opts
-		options[getOptionByID('iconset')].value = getSelectKey(getOptionByID('iconset'), Spring.GetConfigString("UnitIconFolder",'modern'))
-	else
-		options[getOptionByID('iconset')] = nil
-		options[getOptionByID('disticon')].name = "Icon render distance"
-	end
 
 	-- remove engine particles if nano beams are enabled
 	if options[getOptionByID('nanoeffect')] and options[getOptionByID('nanoeffect')].value == 1 then
@@ -2419,7 +2310,7 @@ function init()
 			if option.value < option.min then option.value = option.min end
 			if option.value > option.max then option.value = option.max end
 		end
-		if (option.id == "shadows" or option.id == "shadows_maxquality" or option.id == "shadows_minquality" or option.id == "shadows_disablefps") and (widgetHandler.knownWidgets["Shadow Quality Manager"] == nil or (widgetHandler.orderList["Shadow Quality Manager"] == 0)) then
+		if option.id == "shadows" and (widgetHandler.knownWidgets["Shadow Quality Manager"] == nil or (widgetHandler.orderList["Shadow Quality Manager"] == 0)) then
 			insert = false
 		end
 		if option.id == "shadowslider" and widgetHandler.knownWidgets["Shadow Quality Manager"] ~= nil and (widgetHandler.orderList["Shadow Quality Manager"] > 0) then
@@ -2496,7 +2387,7 @@ function widget:Initialize()
 		Spring.SetConfigInt("UsePBO",0)
 	--end
 
-	Spring.SendCommands("minimap unitsize "..(Spring.GetConfigFloat("MinimapIconScale", 3.5)))		-- spring wont remember what you set with '/minimap iconssize #'
+	Spring.SendCommands("minimap unitsize "..minimapIconsize)		-- spring wont remember what you set with '/minimap iconssize #'
 
 	Spring.SendCommands({"bind f10 options"})
 
@@ -2607,6 +2498,7 @@ end
 function widget:GetConfigData(data)
 	savedTable = {}
 	savedTable.customPresets = customPresets
+	savedTable.minimapIconsize = minimapIconsize
 	savedTable.cameraTransitionTime = cameraTransitionTime
 	savedTable.maxNanoParticles = maxNanoParticles
 	savedTable.savedConfig = {
@@ -2614,7 +2506,7 @@ function widget:GetConfigData(data)
 		water = {'Water', tonumber(Spring.GetConfigInt("Water",1) or 1)},
 		disticon = {'UnitIconDist', tonumber(Spring.GetConfigInt("UnitIconDist",1) or 400)},
 		particles = {'MaxParticles', tonumber(Spring.GetConfigInt("MaxParticles",1) or 15000)},
-		--nanoparticles = {'MaxNanoParticles', tonumber(Spring.GetConfigInt("MaxNanoParticles",1) or 500)},	-- already saved above in: maxNanoParticles
+		--nanoparticles = {'MaxNanoParticles', tonumber(Spring.GetConfigInt("MaxNanoParticles",1) or 500)},
 		decals = {'GroundDecals', tonumber(Spring.GetConfigInt("GroundDecals",1) or 1)},
 		grounddetail = {'GroundDetail', tonumber(Spring.GetConfigInt("GroundDetail",1) or 1)},
 		grassdetail = {'GrassDetail', tonumber(Spring.GetConfigInt("GrassDetail",1) or 5)},
@@ -2626,10 +2518,10 @@ function widget:GetConfigData(data)
 		normalmapping = {'NormalMapping', tonumber(Spring.GetConfigInt("NormalMapping",1) or 1)},
 		treewind = {'TreeWind', tonumber(Spring.GetConfigInt("TreeWind",1) or 1)},
 		hwcursor = {'HardwareCursor', tonumber(Spring.GetConfigInt("HardwareCursor",1) or 1)},
-		sndvolmaster = {'snd_volmaster', tonumber(Spring.GetConfigInt("snd_volmaster",40) or 40)},
-		sndvolbattle = {'snd_volbattle', tonumber(Spring.GetConfigInt("snd_volbattle",40) or 40)},
-		sndvolunitreply = {'snd_volunitreply', tonumber(Spring.GetConfigInt("snd_volunitreply",40) or 40)},
-		sndvolmusic = {'snd_volmusic', tonumber(Spring.GetConfigInt("snd_volmusic",40) or 40)},
+		sndvolmaster = {'snd_volmaster', tonumber(Spring.GetConfigInt("snd_volmaster",1) or 50)},
+		sndvolbattle = {'snd_volbattle', tonumber(Spring.GetConfigInt("snd_volbattle",1) or 50)},
+		sndvolunitreply = {'snd_volunitreply', tonumber(Spring.GetConfigInt("snd_volunitreply",1) or 50)},
+		sndvolmusic = {'snd_volmusic', tonumber(Spring.GetConfigInt("snd_volmusic",1) or 50)},
 	}
 	return savedTable
 end
@@ -2637,6 +2529,9 @@ end
 function widget:SetConfigData(data)
 	if data.customPresets ~= nil then
 		customPresets = data.customPresets
+	end
+	if data.minimapIconsize ~= nil then
+		minimapIconsize = data.minimapIconsize
 	end
 	if data.cameraTransitionTime ~= nil then
 		cameraTransitionTime = data.cameraTransitionTime

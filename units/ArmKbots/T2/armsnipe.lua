@@ -2,16 +2,16 @@ return {
 	armsnipe = {
 		acceleration = 0.12,
 		brakerate = 0.564,
-		buildcostenergy = 18000,
-		buildcostmetal = 700,
+		buildcostenergy = 19600,
+		buildcostmetal = 685,
 		buildpic = "ARMSNIPE.DDS",
 		buildtime = 19137,
 		canmove = true,
 		category = "KBOT MOBILE WEAPON ALL NOTSHIP NOTAIR NOTHOVER NOTSUB SURFACE",
 		cloakcost = 75,
 		cloakcostmoving = 200,
-		collisionvolumeoffsets = "0 -1 -3",
-		collisionvolumescales = "26 41 20",
+		collisionvolumeoffsets = "0 -1 0",
+		collisionvolumescales = "26 41 16",
 		collisionvolumetype = "box",
 		corpse = "DEAD",
 		description = "Sniper Kbot",
@@ -27,7 +27,7 @@ return {
 		maxvelocity = 1.18,
 		maxwaterdepth = 22,
 		mincloakdistance = 80,
-		movementclass = "KBOT3",
+		movementclass = "KBOT2",
 		name = "Sharpshooter",
 		nochasecategory = "VTOL",
 		objectname = "ARMSNIPE",
@@ -118,7 +118,7 @@ return {
 			armsnipe_weapon           = {
 				
 				AreaOfEffect              = 16,
-				avoidFeature              = true,
+				avoidFeature              = false,
 				avoidFriendly             = true,
 				beamTime                  = 0.1,
 				

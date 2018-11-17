@@ -1,7 +1,7 @@
 function widget:GetInfo()
    return {
       name         = "DGun no ground enemies",
-      desc         = "Prevents dgun aim to snap onto enemy ground units, holding SHIFT will still target units",
+      desc         = "Prevents dgun aim to snap onto enemy ground units",
       author       = "Floris", -- (derivate of a Ceddral widget)
       date         = "",
       license      = "GPL",
@@ -25,10 +25,9 @@ function widget:CommandNotify(cmdID, cmdParams, cmdOptions)
 	-- number of cmdParams should either be
 	-- 1 (unitID) or
 	-- 3 (map coordinates)
-	if #cmdParams ~= 1 or select(4, Spring.GetModKeyState()) then -- dgun is already aimed at ground, or when you hold SHIFT
+	if #cmdParams ~= 1 then -- dgun is already aimed at ground
 		return false
 	end
-
 	local mouseX, mouseY = Spring.GetMouseState()
 	local desc, cmdParams2 = Spring.TraceScreenRay(mouseX, mouseY, true)
 	if nil == desc then -- off map, can not handle this properly here

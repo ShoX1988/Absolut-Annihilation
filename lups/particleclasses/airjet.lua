@@ -94,21 +94,16 @@ function AirJet:EndDraw()
 end
 
 function AirJet:Draw()
-  if not Spring.IsUnitIcon(self.unit) then
-    self.isicon = false
-    if (lastTexture1~=self.texture1) then
-      glTexture(1,self.texture1)
-      lastTexture1=self.texture1
-    end
-    if (lastTexture2~=self.texture2) then
-      glTexture(2,self.texture2)
-      lastTexture2=self.texture2
-    end
-
-    glCallList(self.dList)
-  else
-    self.isicon = true
+  if (lastTexture1~=self.texture1) then
+    glTexture(1,self.texture1)
+    lastTexture1=self.texture1
   end
+  if (lastTexture2~=self.texture2) then
+    glTexture(2,self.texture2)
+    lastTexture2=self.texture2
+  end
+
+  glCallList(self.dList)
 end
 
 
@@ -126,18 +121,16 @@ function AirJet:EndDrawDistortion()
 end
 
 function AirJet:DrawDistortion()
-  if not self.isicon then
-    if (lastTexture1~=self.texture1) then
-      glTexture(1,self.texture1)
-      lastTexture1=self.texture1
-    end
-    if (lastTexture2~=self.texture3) then
-      glTexture(2,self.texture3)
-      lastTexture2=self.texture3
-    end
-
-    glCallList(self.dList)
+  if (lastTexture1~=self.texture1) then
+    glTexture(1,self.texture1)
+    lastTexture1=self.texture1
   end
+  if (lastTexture2~=self.texture3) then
+    glTexture(2,self.texture3)
+    lastTexture2=self.texture3
+  end
+
+  glCallList(self.dList)
 end
 
 -----------------------------------------------------------------------------------------------------------------
@@ -158,7 +151,7 @@ function AirJet:Update(n)
     if not WG['lighteffects'] or not WG['lighteffects'].enableThrusters then
       self.lightID = nil
     else
-      if not self.visible or self.isicon then  -- temporarily disabled for testing purposesif self.lightID then
+      if not self.visible then  -- temporarily disabled for testing purposesif self.lightID then
         if self.lightID then
           WG['lighteffects'].removeLight(self.lightID, 3)
           self.lightID = nil

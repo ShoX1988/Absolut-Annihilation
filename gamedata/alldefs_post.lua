@@ -24,24 +24,24 @@ SaveDefsToCustomParams = false
 -------------------------
 
 -- process unitdef
-local minimumbuilddistancerange = 155
+local minimumbuilddistancerange = 115
 
 local vehAdditionalTurnrate = 0
-local vehTurnrateMultiplier = 1.0
+local vehTurnrateMultiplier = 1
 
-local vehAdditionalAcceleration = 0.00
+local vehAdditionalAcceleration = 0
 local vehAccelerationMultiplier = 1
 
 local vehAdditionalVelocity = 0
 local vehVelocityMultiplier = 1
-local vehRSpeedFactor = 0.35
+local vehRSpeedFactor = 0
 
 local kbotAdditionalTurnrate = 0
-local kbotTurnrateMultiplier = 1.15
+local kbotTurnrateMultiplier = 1
 
 local kbotAdditionalAcceleration = 0
-local kbotAccelerationMultiplier = 1.15
-local kbotBrakerateMultiplier = 1.15
+local kbotAccelerationMultiplier = 1
+local kbotBrakerateMultiplier = 1
 
 local oldUnitName = {	-- mostly duplicates
 	armdecom = 'armcom',

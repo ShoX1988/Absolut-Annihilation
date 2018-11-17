@@ -88,7 +88,6 @@ else
 ------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
 
-
 local Lups  --// Lua Particle System
 local initialized = false --// if LUPS isn't started yet, we try it once a gameframe later
 
@@ -100,34 +99,12 @@ local GetUnitRadius        = Spring.GetUnitRadius
 local GetFeatureRadius     = Spring.GetFeatureRadius
 local spGetFeatureDefID    = Spring.GetFeatureDefID
 local spGetGameFrame       = Spring.GetGameFrame
-local spIsUnitInView       = Spring.IsUnitInView
 
 local type  = type
 local pairs = pairs
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
-
-local hideIfIcon = Spring.GetConfigInt("NanoLaserIcon", 0)
-if hideIfIcon == 1 then
-    hideIfIcon = false
-else
-    hideIfIcon = true
-end
-
-local myPlayerID = Spring.GetMyPlayerID()
-function gadget:GotChatMsg(msg, playerID)
-    if playerID == myPlayerID and string.sub(msg,1,15) == "uniticonlasers " then
-        local value = string.sub(msg,16)
-        if value == '1' then
-            hideIfIcon = false
-            Spring.SetConfigInt("NanoLaserIcon", 1)
-        else
-            hideIfIcon = true
-            Spring.SetConfigInt("NanoLaserIcon", 0)
-        end
-    end
-end
 
 if (not GetFeatureRadius) then
   GetFeatureRadius = function(featureID)
@@ -231,7 +208,7 @@ end
 --
 
 local currentNanoEffect = (Spring.GetConfigInt("NanoEffect",1) or 1)
-local maxNewNanoEmitters = (Spring.GetConfigInt("NanoBeamAmount", 6) or 6)    -- limit for performance reasons
+local maxNewNanoEmitters = (Spring.GetConfigInt("NanoBeamAmount", 3) or 3)    -- limit for performance reasons
 
 local nanoParticles = {}
 --local maxEngineParticles = Spring.GetConfigInt("MaxNanoParticles", 10000)
@@ -281,27 +258,17 @@ local function BuilderDestroyed(unitID)
 	builders[#builders] = nil
 end
 
--- update (position) more frequently for air builders
-local airBuilders = {}
-for udid, unitDef in pairs(UnitDefs) do
-    if unitDef.canFly then
-        airBuilders[udid] = true
-    end
-end
-
 function gadget:GameFrame(frame)
     if currentNanoEffect == NanoFxNone then return end
 
     local updateFramerate = math.min(30, 3 + math.floor(#builders/25)) -- update fast at gamestart and gradually slower
     local totalNanoEmitters = 0
-    local myTeamID = Spring.GetMyTeamID()
-    local _, myFullview = Spring.GetSpectatingState()
     for i=1,#builders do
         if totalNanoEmitters > maxNewNanoEmitters then
             break
         end
         local unitID = builders[i]
-        if ((not hideIfIcon and (myFullview or Spring.GetMyAllyTeamID() == Spring.GetUnitAllyTeam(unitID))) or (not Spring.IsUnitIcon(unitID)) and CallAsTeam(myTeamID, spIsUnitInView, unitID))  then
+        if not Spring.IsUnitIcon(unitID) and Spring.IsUnitInView(unitID) then
             local UnitDefID = Spring.GetUnitDefID(unitID)
             local buildpower = builderWorkTime[UnitDefID] or 1
             if ((unitID + frame) % updateFramerate < 1) then
@@ -323,13 +290,13 @@ function gadget:GameFrame(frame)
                             radius = (GetFeatureRadius(target) or 1) * 0.80
                         end
 
-                        --local terraform = false
-                        --local inversed  = false
-                        --if (type=="restore") then
-                        --    terraform = true
-                        --elseif (type=="reclaim") then
-                        --    inversed  = true
-                        --end
+                        local terraform = false
+                        local inversed  = false
+                        if (type=="restore") then
+                            terraform = true
+                        elseif (type=="reclaim") then
+                            inversed  = true
+                        end
 
                         --[[
                         if (type=="reclaim") and (strength > 0) then
@@ -370,12 +337,10 @@ function gadget:GameFrame(frame)
                                 color        = teamColor,
                                 type         = type,
                                 targetradius = radius,
-                                beamtype     = type,
+                                terraform    = terraform,
+                                inversed     = inversed,
                                 cmdTag       = cmdTag, --//used to end the fx when the command is finished
                             }
-                            if airBuilders[UnitDefID] then
-                                nanoParams.quickupdates = true
-                            end
 
                             local nanoSettings = CopyMergeTables(NanoFx.default, nanoParams)
                             ExecuteLuaCode(nanoSettings)
@@ -435,9 +400,9 @@ function init()
         local NanoEffx = NanoFx[fxname]
         NanoEffx.delaySpread = 30
         NanoEffx.fxtype = NanoEffx.fxtype:lower()
-        --if ((Spring.GetConfigInt("NanoEffect",1) or 1) == 1) and ((NanoEffx.fxtype=="nanolasers") or (NanoEffx.fxtype=="nanolasersshader")) then
-        --    NanoEffx.flare = true
-        --end
+        if ((Spring.GetConfigInt("NanoEffect",1) or 1) == 1) and ((NanoEffx.fxtype=="nanolasers") or (NanoEffx.fxtype=="nanolasersshader")) then
+            NanoEffx.flare = true
+        end
 
         --// parse lua code in the table, so we can execute it later
         ParseLuaCode(NanoEffx)
@@ -451,7 +416,7 @@ function gadget:Update()
 
     if initialized then
         --// enable particle effect?
-        maxNewNanoEmitters = (Spring.GetConfigInt("NanoBeamAmount", 6) or 6)
+        maxNewNanoEmitters = (Spring.GetConfigInt("NanoBeamAmount", 3) or 3)
         if currentNanoEffect ~= (Spring.GetConfigInt("NanoEffect",1) or 1) then
             currentNanoEffect = (Spring.GetConfigInt("NanoEffect",1) or 1)
             init()
@@ -462,7 +427,7 @@ function gadget:Update()
 
   Lups = GG['Lups']
   if (Lups) then
-      maxNewNanoEmitters = (Spring.GetConfigInt("NanoBeamAmount", 6) or 6)
+      maxNewNanoEmitters = (Spring.GetConfigInt("NanoBeamAmount", 3) or 3)
       currentNanoEffect = (Spring.GetConfigInt("NanoEffect",1) or 1)
       init()
     initialized=true

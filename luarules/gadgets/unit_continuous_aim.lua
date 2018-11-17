@@ -122,9 +122,6 @@ local popups = {	-- exclude auto target range boost for popup units
 	[UnitDefNames.corvipe.id] = true,
 	[UnitDefNames.corpun.id] = true,
 	[UnitDefNames.corexp.id] = true,
-
-	[UnitDefNames.corllt.id] = true,
-	[UnitDefNames.armllt.id] = true,
 }
 
 function gadget:UnitCreated(unitID,unitDefID)
@@ -136,7 +133,7 @@ function gadget:UnitCreated(unitID,unitDefID)
 	if not popups[unitDefID] then
 		for id, table in pairs(UnitDefs[Spring.GetUnitDefID(unitID)].weapons) do
 			local range = WeaponDefs[table.weaponDef].range
-			Spring.SetUnitWeaponState(unitID, id, "autoTargetRangeBoost", (0.1*range) or 20)
+			Spring.SetUnitWeaponState(unitID, id, "autoTargetRangeBoost", (0.0*range) or 0)
 		end
 	end
 end

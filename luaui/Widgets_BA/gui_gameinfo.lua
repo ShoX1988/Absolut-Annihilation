@@ -32,17 +32,17 @@ for i =1, #teams do
 	end
 end
 
-local content = ""
-content = content .. titlecolor..Game.gameName..valuegreycolor.." ("..Game.gameMutator..") "..titlecolor..Game.gameVersion.."\n"
-content = content .. keycolor.."Engine"..separator..valuegreycolor..((Game and Game.version) or (Engine and Engine.version) or "Engine version error").."\n"
-content = content .. "\n"
+local changelogFile = ""
+changelogFile = changelogFile .. titlecolor..Game.gameName..valuegreycolor.." ("..Game.gameMutator..") "..titlecolor..Game.gameVersion.."\n"
+changelogFile = changelogFile .. keycolor.."Engine"..separator..valuegreycolor..((Game and Game.version) or (Engine and Engine.version) or "Engine version error").."\n"
+changelogFile = changelogFile .. "\n"
 
 -- map info
-content = content .. titlecolor..Game.mapName.."\n"
-content = content .. valuegreycolor..Game.mapDescription.."\n"
-content = content .. keycolor.."Size"..separator..valuegreycolor..Game.mapX..valuegreycolor.." x "..valuegreycolor..Game.mapY.."\n"
-content = content .. keycolor.."Gravity"..separator..valuegreycolor..Game.gravity.."\n"
-content = content .. keycolor.."Hardness"..separator..valuegreycolor..Game.mapHardness.. keycolor.."\n"
+changelogFile = changelogFile .. titlecolor..Game.mapName.."\n"
+changelogFile = changelogFile .. valuegreycolor..Game.mapDescription.."\n"
+changelogFile = changelogFile .. keycolor.."Size"..separator..valuegreycolor..Game.mapX..valuegreycolor.." x "..valuegreycolor..Game.mapY.."\n"
+changelogFile = changelogFile .. keycolor.."Gravity"..separator..valuegreycolor..Game.gravity.."\n"
+changelogFile = changelogFile .. keycolor.."Hardness"..separator..valuegreycolor..Game.mapHardness.. keycolor.."\n"
 tidal = Game.tidal
 if Spring.GetModOptions() and Spring.GetModOptions().map_tidal then
 	map_tidal = Spring.GetModOptions().map_tidal
@@ -55,24 +55,21 @@ if Spring.GetModOptions() and Spring.GetModOptions().map_tidal then
 		tidal = 23
 	end
 end
-if Spring.GetTidal then
-	tidal = Spring.GetTidal()
-end
-content = content .. keycolor.."Tidal speed"..separator..valuegreycolor..tidal.. keycolor.."\n"
+changelogFile = changelogFile .. keycolor.."Tidal speed"..separator..valuegreycolor..tidal.. keycolor.."\n"
 
 
 if Game.windMin == Game.windMax then
-	content = content .. keycolor.."Wind speed"..separator..valuegreycolor..Game.windMin..valuegreycolor.."\n"
+	changelogFile = changelogFile .. keycolor.."Wind speed"..separator..valuegreycolor..Game.windMin..valuegreycolor.."\n"
 else
-	content = content .. keycolor.."Wind speed"..separator..valuegreycolor..Game.windMin..valuegreycolor.."  -  "..valuegreycolor..Game.windMax.."\n"
+	changelogFile = changelogFile .. keycolor.."Wind speed"..separator..valuegreycolor..Game.windMin..valuegreycolor.."  -  "..valuegreycolor..Game.windMax.."\n"
 end
 if Game.waterDamage == 0 then
 	vcolor = valuegreycolor
 else
 	vcolor = valuecolor
 end
-content = content .. keycolor.."Water damage"..separator..vcolor..Game.waterDamage .. keycolor.."\n"
-content = content .. "\n"
+changelogFile = changelogFile .. keycolor.."Water damage"..separator..vcolor..Game.waterDamage .. keycolor.."\n"
+changelogFile = changelogFile .. "\n"
 
 -- modoptions
 local defaultModoptions = VFS.Include("modoptions.lua")
@@ -125,21 +122,21 @@ for key, value in pairs(modoptions) do
 	end
 end
 if chickensEnabled then	-- filter chicken modoptions
-	content = content .. titlecolor.."Chicken options\n"
+	changelogFile = changelogFile .. titlecolor.."Chicken options\n"
 	for key, value in pairs(changedChickenModoptions) do
-		content = content .. keycolor..string.sub(key, 9)..separator..valuecolor..value.."\n"
+		changelogFile = changelogFile .. keycolor..string.sub(key, 9)..separator..valuecolor..value.."\n"
 	end
 	for key, value in pairs(unchangedChickenModoptions) do
-		content = content .. keycolor..string.sub(key, 9)..separator..valuegreycolor..value.."\n"
+		changelogFile = changelogFile .. keycolor..string.sub(key, 9)..separator..valuegreycolor..value.."\n"
 	end
-	content = content .. "\n"
+	changelogFile = changelogFile .. "\n"
 end
-content = content .. titlecolor.."Mod options\n"
+changelogFile = changelogFile .. titlecolor.."Mod options\n"
 for key, value in pairs(changedModoptions) do
-	content = content .. keycolor..key..separator..valuecolor..value.."\n"
+	changelogFile = changelogFile .. keycolor..key..separator..valuecolor..value.."\n"
 end
 for key, value in pairs(unchangedModoptions) do
-	content = content .. keycolor..key..separator..valuegreycolor..value.."\n"
+	changelogFile = changelogFile .. keycolor..key..separator..valuegreycolor..value.."\n"
 end
 
 
@@ -327,7 +324,7 @@ function DrawTextarea(x,y,width,height,scrollbar)
 	end
 
 	-- draw textarea
-	if content then
+	if changelogFile then
 		font:Begin()
 		local lineKey = startLine
 		local j = 1
@@ -581,7 +578,7 @@ function toggle()
 end
 
 function widget:Initialize()
-	if content then
+	if changelogFile then
 
 		widgetHandler:AddAction("customgameinfo", toggle)
 		Spring.SendCommands("unbind any+i gameinfo")
@@ -601,10 +598,10 @@ function widget:Initialize()
 		end
 
 		-- somehow there are a few characters added at the start that we need to remove
-		--content = string.sub(content, 4)
+		--changelogFile = string.sub(changelogFile, 4)
 
 		-- store changelog into array
-		changelogLines = lines(content)
+		changelogLines = lines(changelogFile)
 
 		for i, line in ipairs(changelogLines) do
 			totalChangelogLines = i

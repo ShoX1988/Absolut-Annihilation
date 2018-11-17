@@ -36,6 +36,8 @@ local CEGHeal = "heal"
 local CEGLevelUp = "commander-levelup"
 local ValidID = Spring.ValidUnitID
 
+common = include("headers/common_includes_lus.lua")
+
 function Emit(pieceName, effectName)
 local x,y,z,dx,dy,dz	= Spring.GetUnitPiecePosDir(unitID, pieceName)
 Spring.SpawnCEG(effectName, x,y,z, dx, dy, dz)

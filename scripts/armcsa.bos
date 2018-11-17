@@ -160,7 +160,7 @@ StopBuilding()
 
 QueryNanoPiece(piecenum)
 {
-	piecenum = nanopoint;
+	piecenum = base;
 	return (0);
 }
 

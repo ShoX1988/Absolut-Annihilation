@@ -1,9 +1,9 @@
 return {
 	armbull = {
 		acceleration = 0.0396,
-		brakerate = 0.18,
-		buildcostenergy = 13000,
-		buildcostmetal = 950,
+		brakerate = 0.165,
+		buildcostenergy = 13200,
+		buildcostmetal = 900,
 		buildpic = "ARMBULL.DDS",
 		buildtime = 17228,
 		canmove = true,
@@ -23,7 +23,7 @@ return {
 		leavetracks = true,
 		maxdamage = 4200,
 		maxslope = 12,
-		maxvelocity = 2.225,
+		maxvelocity = 2.44,
 		maxwaterdepth = 15,
 		movementclass = "HTANK3",
 		name = "Bulldog",
@@ -37,10 +37,10 @@ return {
 		trackstrength = 10,
 		tracktype = "StdTank",
 		trackwidth = 40,
-		turninplace = true,
-		turninplaceanglelimit = 90,
+		turninplace = false,
+		turninplaceanglelimit = 140,
 		turninplacespeedlimit = 1.6104,
-		turnrate = 365,
+		turnrate = 415,
 		customparams = {
 			arm_tank = "1",
 			techlevel = 2,
@@ -147,7 +147,7 @@ return {
 		},
 		weapondefs = {
 			arm_bull = {
-				areaofeffect = 130,
+				areaofeffect = 140,
 				avoidfeature = false,
 				craterareaofeffect = 140,
 				craterboost = 0,

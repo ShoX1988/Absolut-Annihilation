@@ -19,7 +19,7 @@ function addon:Initialize()
     if Spring.GetModOptions and (tonumber(Spring.GetModOptions().barmodels) or 0) ~= 0 then
         Spring.SetWMIcon("bitmaps/barlogo.png")
     else
-	    Spring.SetWMIcon("bitmaps/balogo.png")
+	    Spring.SetWMIcon("bitmaps/salogo.png")
     end
 	Spring.SetWMCaption(name .. " (Spring " .. ((Game and Game.version) or (Engine and Engine.version) or "") .. ")", name)
 end
