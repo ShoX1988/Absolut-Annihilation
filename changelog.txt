@@ -10,6 +10,10 @@ Revert reclaimspeed nerf on rezzers
 Reverted turrets turning before units are in range
 Reverted air units coliding (bombers, gunships and cons)
 Reverted nanoframe blocking nerf
+Hidden/forgotten nerf to flaks removed (850 dmg default to 250/500 to bombers/fighters)
+global builddistanced reduced slightly to be more in line with 946. 155 > 115
+Icons back to same as 9.46
+Simplified comblast range widget to just show full/lethal + 1 ring of edge damage
 
 10.13 -> 10.14
 XX/XX/2018
