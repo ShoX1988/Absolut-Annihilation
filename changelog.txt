@@ -1,4 +1,4 @@
-﻿BA 10 forked into Supreme Alliance v0.01:
+﻿BA 10 forked into Absolut Annihilation v0.01:
 
 Balance:
 Vehicles, Kbots and sea fully reverted to BA9.46 stats/costs/functionality
@@ -14,6 +14,7 @@ Hidden/forgotten nerf to flaks removed (850 dmg default to 250/500 to bombers/fi
 global builddistanced reduced slightly to be more in line with 946. 155 > 115
 Icons back to same as 9.46
 Simplified comblast range widget to just show full/lethal + 1 ring of edge damage
+lightning weapons now deal all their damage instantly again
 
 10.13 -> 10.14
 XX/XX/2018
