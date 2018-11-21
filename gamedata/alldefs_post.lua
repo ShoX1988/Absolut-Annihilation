@@ -203,20 +203,6 @@ function UnitDef_Post(name, uDef)
 		uDef.buildtime = uDef.buildtime * 1.5 -- because rezzing is too easy
 	end
 	
-	if uDef.icontype and uDef.icontype == "sea" then
-		if uDef.featuredefs and uDef.featuredefs.dead and uDef.featuredefs.dead.metal and uDef.buildcostmetal then
-			uDef.featuredefs.dead.metal = uDef.buildcostmetal * 0.5
-		end
-		if uDef.featuredefs and uDef.featuredefs.heap and uDef.featuredefs.heap.metal and uDef.buildcostmetal then
-			uDef.featuredefs.heap.metal = uDef.buildcostmetal * 0.25
-		end
-		if uDef.featuredefs and uDef.featuredefs.dead and uDef.featuredefs.dead.damage then
-			uDef.featuredefs.dead.damage = uDef.featuredefs.dead.damage*2
-		end
-		if uDef.featuredefs and uDef.featuredefs.heap and uDef.featuredefs.heap.damage then
-			uDef.featuredefs.heap.damage = uDef.featuredefs.heap.damage*2
-		end
-	end
 	--Aircraft movements here:
 	if uDef.canfly == true and not uDef.hoverattack == true then
 		turn = (((uDef.turnrate)*0.16)/360)/30
@@ -249,14 +235,6 @@ function UnitDef_Post(name, uDef)
 		if uDef.maxvelocity ~= nil then
 			uDef.maxvelocity = (uDef.maxvelocity + vehAdditionalVelocity) * vehVelocityMultiplier
 		end
-
-		if uDef.turnrate and uDef.maxvelocity and uDef.brakerate and uDef.acceleration then
-			local k = 1800/(0.164 * uDef.turnrate)
-			uDef.acceleration = uDef.maxvelocity / (2*k)
-			uDef.brakerate = uDef.maxvelocity / (k)
-			uDef.turninplaceanglelimit = 90
-			uDef.turninplace = true
-		end
 	end
 
 	-- kbots
@@ -272,9 +250,6 @@ function UnitDef_Post(name, uDef)
 		if uDef.brakerate ~= nil then
 			uDef.brakerate = uDef.brakerate * kbotBrakerateMultiplier
 		end
-		
-		uDef.turninplace = true
-		uDef.turninplaceanglelimit = 90
 	end
 
 	--Set a minimum for builddistance
