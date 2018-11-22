@@ -1,7 +1,8 @@
-﻿BA 10 forked into Absolut Annihilation v0.01:
+﻿BA 10 forked into Absolut Annihilation v0.02:
 
 Balance:
-Vehicles, Kbots and sea fully reverted to BA9.46 stats/costs/functionality
+Vehicles, Kbots and sea fully reverted to BA9.46 stats and functionality. 
+Kept costs rounded as its cleaner to work with when tweaking
 Peewee and AK scripts improved so they will fire better under heavy micro/apm (Doo op)
 Vehicle reversing completely removed for now
 Armfark workertime kept buffed (120>140)
@@ -11,10 +12,13 @@ Reverted turrets turning before units are in range
 Reverted air units coliding (bombers, gunships and cons)
 Reverted nanoframe blocking nerf
 Hidden/forgotten nerf to flaks removed (850 dmg default to 250/500 to bombers/fighters)
-global builddistanced reduced slightly to be more in line with 946. 155 > 115
+Global builddistanced reduced slightly to be more in line with 946. 155 > 115
+Lightning weapons now deal all their damage instantly again
+
+Other:
 Icons back to same as 9.46
 Simplified comblast range widget to just show full/lethal + 1 ring of edge damage
-lightning weapons now deal all their damage instantly again
+
 
 10.13 -> 10.14
 XX/XX/2018
