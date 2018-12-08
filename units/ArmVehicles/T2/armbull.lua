@@ -1,6 +1,6 @@
 return {
 	armbull = {
-		acceleration = 0.0396,
+		acceleration = 0.0297,
 		brakerate = 0.165,
 		buildcostenergy = 13200,
 		buildcostmetal = 900,
@@ -23,7 +23,7 @@ return {
 		leavetracks = true,
 		maxdamage = 4200,
 		maxslope = 12,
-		maxvelocity = 2.44,
+		maxvelocity = 2.41,
 		maxwaterdepth = 15,
 		movementclass = "HTANK3",
 		name = "Bulldog",
@@ -40,7 +40,7 @@ return {
 		turninplace = false,
 		turninplaceanglelimit = 140,
 		turninplacespeedlimit = 1.6104,
-		turnrate = 415,
+		turnrate = 373,
 		customparams = {
 			arm_tank = "1",
 			techlevel = 2,

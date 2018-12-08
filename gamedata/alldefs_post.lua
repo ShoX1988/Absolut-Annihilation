@@ -30,7 +30,8 @@ local vehAdditionalTurnrate = 0
 local vehTurnrateMultiplier = 1
 
 local vehAdditionalAcceleration = 0
-local vehAccelerationMultiplier = 1
+local vehAccelerationMultiplier = 0.5
+local vehBrakerateMultiplier = 0.5
 
 local vehAdditionalVelocity = 0
 local vehVelocityMultiplier = 1
@@ -234,6 +235,10 @@ function UnitDef_Post(name, uDef)
 
 		if uDef.maxvelocity ~= nil then
 			uDef.maxvelocity = (uDef.maxvelocity + vehAdditionalVelocity) * vehVelocityMultiplier
+		end
+		
+		if uDef.brakerate ~= nil then
+			uDef.brakerate = uDef.brakerate * vehBrakerateMultiplier
 		end
 	end
 

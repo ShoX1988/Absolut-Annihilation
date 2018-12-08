@@ -1,6 +1,6 @@
 return {
 	correap = {
-		acceleration = 0.044,
+		acceleration = 0.0322,
 		brakerate = 0.198,
 		buildcostenergy = 10280,
 		buildcostmetal = 630,
@@ -23,7 +23,7 @@ return {
 		leavetracks = true,
 		maxdamage = 4900,
 		maxslope = 12,
-		maxvelocity = 2.616,
+		maxvelocity = 2.589,
 		maxwaterdepth = 100,
 		movementclass = "HTANK3",
 		name = "Reaper",

@@ -1,7 +1,7 @@
 ﻿BA 10 forked into Absolut Annihilation v0.02:
 
 Balance:
-Vehicles, Kbots and sea fully reverted to BA9.46 stats and functionality. 
+Vehicles, Kbots and sea fully reverted to BA9.46 stats.
 Kept costs rounded as its cleaner to work with when tweaking
 Peewee and AK scripts improved so they will fire better under heavy micro/apm (Doo op)
 Vehicle reversing completely removed for now

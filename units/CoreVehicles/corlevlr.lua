@@ -1,6 +1,6 @@
 return {
 	corlevlr = {
-		acceleration = 0.0364,
+		acceleration = 0.02457,
 		brakerate = 1.0854,
 		buildcostenergy = 2500,
 		buildcostmetal = 220,
@@ -23,7 +23,7 @@ return {
 		leavetracks = true,
 		maxdamage = 1338,
 		maxslope = 17,
-		maxvelocity = 1.4265,
+		maxvelocity = 1.41,
 		maxwaterdepth = 12,
 		movementclass = "TANK2",
 		name = "Leveler",
@@ -39,7 +39,7 @@ return {
 		turninplace = false,
 		turninplaceanglelimit = 140,
 		turninplacespeedlimit = 0.94149,
-		turnrate = 366.20001,
+		turnrate = 347.89,
 		script = "BASICTANKSCRIPT.LUA",
 		customparams = {
 			bar_trackoffset = 7,
